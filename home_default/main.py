@@ -51,29 +51,29 @@ ugfx.display_image(
 
 
 
-# Draw for people to see
-ugfx.orientation(90)
-# Draw introduction
-ugfx.set_default_font(ugfx.FONT_TITLE)
-ugfx.Label(0, ugfx.height() - name_height - intro_height, ugfx.width(), intro_height, intro_text, justification=ugfx.Label.CENTER)
-# Process name
-name_setting = name("Set your name in the settings app")
-if len(name_setting) <= max_name:
-    ugfx.set_default_font(ugfx.FONT_NAME)
-else:
-    ugfx.set_default_font(ugfx.FONT_MEDIUM_BOLD)
-# Draw name
-ugfx.Label(0, ugfx.height() - name_height, ugfx.width(), name_height, name_setting, justification=ugfx.Label.CENTER)
+# # Draw for people to see
+# ugfx.orientation(90)
+# # Draw introduction
+# ugfx.set_default_font(ugfx.FONT_TITLE)
+# ugfx.Label(0, ugfx.height() - name_height - intro_height, ugfx.width(), intro_height, intro_text, justification=ugfx.Label.CENTER)
+# # Process name
+# name_setting = name("Set your name in the settings app")
+# if len(name_setting) <= max_name:
+#     ugfx.set_default_font(ugfx.FONT_NAME)
+# else:
+#     ugfx.set_default_font(ugfx.FONT_MEDIUM_BOLD)
+# # Draw name
+# ugfx.Label(0, ugfx.height() - name_height, ugfx.width(), name_height, name_setting, justification=ugfx.Label.CENTER)
 
 
 
 # Draw for wearer to see
 ugfx.orientation(270)
-# Title
-ugfx.set_default_font(ugfx.FONT_TITLE)
-ugfx.Label(0, ugfx.height() - info_height * 2, ugfx.width(), info_height, "TiLDA Mk4", justification=ugfx.Label.CENTER)
-# info
-ugfx.Label(0, ugfx.height() - info_height, ugfx.width(), info_height, "Long Press MENU", justification=ugfx.Label.CENTER)
+# # Title
+# ugfx.set_default_font(ugfx.FONT_TITLE)
+# ugfx.Label(0, ugfx.height() - info_height * 2, ugfx.width(), info_height, "TiLDA Mk4", justification=ugfx.Label.CENTER)
+# # info
+# ugfx.Label(0, ugfx.height() - info_height, ugfx.width(), info_height, "Long Press MENU", justification=ugfx.Label.CENTER)
 
 ugfx.set_default_font(ugfx.FONT_SMALL)
 status = ugfx.Label(0, ugfx.height() - info_height * 2 - status_height, ugfx.width(), status_height, "", justification=ugfx.Label.CENTER)
