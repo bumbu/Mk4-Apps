@@ -22,7 +22,7 @@ grid_size = 4
 while (not Buttons.is_pressed(Buttons.BTN_A)) and (not Buttons.is_pressed(Buttons.BTN_B)) and (not Buttons.is_pressed(Buttons.BTN_Menu)):
 	ugfx.clear()
 
-	ugfx.orientation(0)
+	ugfx.orientation(270)
 
 	# Title
 	ugfx.set_default_font(ugfx.FONT_TITLE)
