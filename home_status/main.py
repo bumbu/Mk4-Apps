@@ -22,8 +22,7 @@ grid_size = 4
 while (not Buttons.is_pressed(Buttons.BTN_A)) and (not Buttons.is_pressed(Buttons.BTN_B)) and (not Buttons.is_pressed(Buttons.BTN_Menu)):
 	ugfx.clear()
 
-	ugfx.orientation(90)
-	ugfx.Label(0, ugfx.height() - 500, ugfx.width(), 90, "Warm and wet?", justification=ugfx.Label.CENTER)
+	ugfx.orientation(0)
 
 	# Title
 	ugfx.set_default_font(ugfx.FONT_TITLE)
