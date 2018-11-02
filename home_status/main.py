@@ -48,6 +48,7 @@ while (not Buttons.is_pressed(Buttons.BTN_A)) and (not Buttons.is_pressed(Button
 	for time, hum in enumerate(array_hum):
 		ugfx.area(int((time+1)*grid_size), 200-int((hum/4+1)*grid_size), grid_size-2, grid_size-2, ugfx.BLUE)
 	count = count + 1
-	sleep.sleep_ms(10000)
+	# sleep.sleep_ms(10000)
+	sleep_or_exit(0.5)
 
-restart_to_default()
+app.restart_to_default()
