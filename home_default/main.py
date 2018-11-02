@@ -17,14 +17,7 @@ from homescreen import *
 import time
 from tilda import Buttons
 
-# We ❤️ our sponsors
 init()
-ugfx.display_image(0, 0, "shared/sponsors.png")
-wait_until = time.ticks_ms() + 3000
-while time.ticks_ms() < wait_until:
-    time.sleep(0.1)
-    if Buttons.is_pressed(Buttons.BTN_A) or Buttons.is_pressed(Buttons.BTN_B) or Buttons.is_pressed(Buttons.BTN_Menu):
-        break
 
 # Padding for name
 intro_height = 30
