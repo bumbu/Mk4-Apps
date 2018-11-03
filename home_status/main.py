@@ -12,43 +12,84 @@ from tilda import Sensors, Buttons
 from app import *
 from dialogs import *
 from homescreen import *
+import time
 
 ugfx_helper.init()
-array_temp = []
+# time_window = 600 # 10 minutes
+time_window = 1 # 1 second
+array_temp = [0]
 array_hum = []
-count = 0
-grid_size = 4
+current_temp = (time.time() // time_window, 0, 0) # sum of all values from this window, number of values
 
-while (not Buttons.is_pressed(Buttons.BTN_A)) and (not Buttons.is_pressed(Buttons.BTN_B)) and (not Buttons.is_pressed(Buttons.BTN_Menu)):
-	ugfx.clear()
+def log_temperature(temp):
+  global current_temp
+  window_index = time.time() // time_window
 
-	ugfx.orientation(270)
+  if current_temp[0] == window_index:
+    current_temp = (window_index, current_temp[1] + temp, current_temp[2] + 1)
+    array_temp[len(array_temp) - 1] = current_temp[1] / current_temp[2]
+  else:
+    array_temp.append(temp)
+    current_temp = (window_index, temp, 1)
 
-	# Title
-	ugfx.set_default_font(ugfx.FONT_TITLE)
-	temp_cal =  Sensors.get_tmp_temperature()-6
-	string_temp = "%.1f degrees C" % temp_cal
-	ugfx.Label(0, ugfx.height() - 120, ugfx.width(), 60, string_temp, justification=ugfx.Label.CENTER)
+  # Remove if too many
+  if len(array_temp) > ugfx.width():
+    array_temp.pop(0)
 
+# Background stuff
+ugfx.backlight(0)
+ugfx.clear(ugfx.html_color(0x000000))
 
-	hum =  Sensors.get_hdc_humidity()
-	string_hum = "%.1f %% humidity" % hum
-	ugfx.Label(0, ugfx.height() - 60, ugfx.width(), 60, string_hum, justification=ugfx.Label.CENTER)
+# Colour stuff
+style = ugfx.Style()
+style.set_enabled([ugfx.RED, ugfx.html_color(0x000000), ugfx.html_color(0x000000), ugfx.html_color(0x000000)])
+style.set_background(ugfx.html_color(0x000000))
+ugfx.set_default_style(style)
 
-	if count < 58:
-		array_temp.append(temp_cal)
-		array_hum.append(hum)
-	else:
-		array_temp.pop(0)
-		array_hum.pop(0)
-		array_temp.append(temp_cal)
-		array_hum.append(hum)
-	for time, temp in enumerate(array_temp):
-		ugfx.area(int((time+1)*grid_size), 180-int((temp+1)*grid_size), grid_size-2, grid_size-2, ugfx.RED)
-	for time, hum in enumerate(array_hum):
-		ugfx.area(int((time+1)*grid_size), 200-int((hum/4+1)*grid_size), grid_size-2, grid_size-2, ugfx.BLUE)
-	count = count + 1
-	# sleep.sleep_ms(10000)
-	sleep_or_exit(0.5)
+# Draw vertical normal
+ugfx.orientation(270)
 
-app.restart_to_default()
+# Temperature
+ugfx.set_default_font(ugfx.FONT_TITLE)
+temperatureLabel = ugfx.Label(0, ugfx.height() - 60, ugfx.width() // 2, 60, "loading...", justification=ugfx.Label.CENTER)
+
+# Humidity
+ugfx.set_default_font(ugfx.FONT_TITLE)
+humidityLabel = ugfx.Label(ugfx.width() // 2, ugfx.height() - 60, ugfx.width() // 2, 60, "loading...", justification=ugfx.Label.CENTER)
+
+# ugfx.area(0, 0, 1, 1, ugfx.RED) # left, top, width, height
+
+# update loop
+while True:
+  # temperature
+  temp_cal =  Sensors.get_tmp_temperature()-6
+  string_temp = "%.1f C" % temp_cal
+  temperatureLabel.text(string_temp)
+  log_temperature(temp_cal)
+
+  # humidity
+  hum =  Sensors.get_hdc_humidity()
+  string_hum = "%.1f %%" % hum
+  humidityLabel.text(string_hum)
+
+  # temperature chart
+  temp_min = min(array_temp)
+  temp_max = max(array_temp)
+  temp_range = temp_max - temp_min
+  if temp_range <= 0:
+    temp_range = 1
+  # temp from 0 to 200px
+  chart_min = 0
+  chart_max = 200
+  ugfx.area(0, 0, ugfx.width(), chart_max, ugfx.BLACK) # clean chart
+  # print(temp_min, temp_max, temp_range)
+  for index, temp in enumerate(array_temp):
+    ugfx.area(int(index), chart_max - int((temp-temp_min)/temp_range*chart_max), 1, 1, ugfx.RED)
+
+  # if len(array_temp) % 10 > 4:
+  #   ugfx.power_mode(ugfx.POWER_DEEP_SLEEP)
+  #   ugfx.backlight(0)
+  # else:
+  #   ugfx.power_mode(ugfx.POWER_ON)
+
+  sleep_or_exit(0.5)
